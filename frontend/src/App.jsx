@@ -18,12 +18,12 @@ function App() {
 
   return (
     <Routes>
-      <Route path="/" element={POSSIBLE_PAGES[4]} />
-      <Route index element={POSSIBLE_PAGES[0]} />
-      <Route path="/" element={POSSIBLE_PAGES[4]} />
-      <Route path="/" element={POSSIBLE_PAGES[4]} />
-      <Route path="/" element={POSSIBLE_PAGES[4]} />
-      <Route />
+      <Route path="/" element={POSSIBLE_PAGES[4]}>
+        <Route index element={POSSIBLE_PAGES[0]} />
+        <Route path="/images/:imageId" element={POSSIBLE_PAGES[1]} />
+        <Route path="/upload" element={POSSIBLE_PAGES[2]} />
+        <Route path="/login" element={POSSIBLE_PAGES[3]} />
+      </Route>
     </Routes>
   );
 }
