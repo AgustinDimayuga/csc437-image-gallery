@@ -6,9 +6,13 @@ const PORT = Number.parseInt(getEnvVar("PORT", false), 10) || 3000;
 const app = express();
 
 app.get("/hello", (req, res) => {
-    res.send("Hello, World " + SHARED_TEST);
+  res.send("Hello, World " + SHARED_TEST);
 });
 
 app.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}.  CTRL+C to stop.`);
+  console.log(`Server running at http://localhost:${PORT}.  CTRL+C to stop.`);
 });
+
+const STATIC_DIR = getEnvVar("STATIC_DIR") || "public";
+
+app.use(express.static(STATIC_DIR));
