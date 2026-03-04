@@ -7,6 +7,7 @@ import "./App.css";
 import { Route, Routes } from "react-router";
 import { MainLayout } from "./MainLayout.jsx";
 import { VALID_ROUTES } from "./shared/ValidRoutes.js";
+import { SHARED_TEST } from "./shared/example.js";
 
 function App() {
   const POSSIBLE_PAGES = [
