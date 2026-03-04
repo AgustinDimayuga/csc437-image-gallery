@@ -6,6 +6,7 @@ import { LoginPage } from "./LoginPage.jsx";
 import "./App.css";
 import { Route, Routes } from "react-router";
 import { MainLayout } from "./MainLayout.jsx";
+import { VALID_ROUTES } from "./shared/ValidRoutes.js";
 
 function App() {
   const POSSIBLE_PAGES = [
@@ -18,11 +19,11 @@ function App() {
 
   return (
     <Routes>
-      <Route path="/" element={POSSIBLE_PAGES[4]}>
+      <Route path={VALID_ROUTES.HOME} element={POSSIBLE_PAGES[4]}>
         <Route index element={POSSIBLE_PAGES[0]} />
-        <Route path="/images/:imageId" element={POSSIBLE_PAGES[1]} />
-        <Route path="/upload" element={POSSIBLE_PAGES[2]} />
-        <Route path="/login" element={POSSIBLE_PAGES[3]} />
+        <Route path={VALID_ROUTES.IMAGE} element={POSSIBLE_PAGES[1]} />
+        <Route path={VALID_ROUTES.UPLOAD} element={POSSIBLE_PAGES[2]} />
+        <Route path={VALID_ROUTES.LOGIN} element={POSSIBLE_PAGES[3]} />
       </Route>
     </Routes>
   );
