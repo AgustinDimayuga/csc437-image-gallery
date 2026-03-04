@@ -1,7 +1,7 @@
 import express from "express";
 import { getEnvVar } from "./getEnvVar.js";
-import { VALID_ROUTES } from "../../frontend/src/shared/ValidRoutes.js";
-import { SHARED_TEST } from "../../frontend/src/shared/example.js";
+import { SHARED_TEST } from "./shared/example.js";
+import { VALID_ROUTES } from "./shared/ValidRoutes.js";
 
 const PORT = Number.parseInt(getEnvVar("PORT", false), 10) || 3000;
 const app = express();
