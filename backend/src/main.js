@@ -61,8 +61,11 @@ app.get("/api/hello", (req, res) => {
 app.get(Object.values(VALID_ROUTES), (req, res) => {
   res.sendFile("index.html", { root: STATIC_DIR });
 });
+function waitDuration(numMs) {
+  return new Promise((resolve) => setTimeout(resolve, numMs));
+}
 app.get("/api/images", (req, res) => {
-  res.send(IMAGES);
+  waitDuration(2000).then(() => res.send(IMAGES));
 });
 
 app.listen(PORT, () => {
