@@ -13,6 +13,7 @@ export function ImageDetails() {
       {loadingState && <span>Loading...</span>}
       {errorDuringFetch.length !== 0 && <span>{errorDuringFetch}</span>}
       <h2>{image.name}</h2>
+      <p>By {image.author.username}</p>
       <img className="ImageDetails-img" src={image.src} alt={image.name} />
     </>
   );

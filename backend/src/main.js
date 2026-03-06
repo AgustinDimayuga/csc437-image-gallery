@@ -68,11 +68,10 @@ app.get(Object.values(VALID_ROUTES), (req, res) => {
 function waitDuration(numMs) {
   return new Promise((resolve) => setTimeout(resolve, numMs));
 }
-app.get("/api/images", (req, res) => {
-  waitDuration(1000)
-    .then(() => imageProvider.getAllImages())
-    .then((images) => res.send(images))
-    .catch((err) => res.status(500).send(String(err)));
+app.get("/api/images", async (req, res) => {
+  await waitDuration(1000);
+  const response = await imageProvider.getAllImagesWithAuthor();
+  res.send(response);
 });
 
 app.listen(PORT, () => {
