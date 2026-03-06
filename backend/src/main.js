@@ -51,7 +51,11 @@ import express from "express";
 import { getEnvVar } from "./getEnvVar.js";
 import { SHARED_TEST } from "./shared/example.js";
 import { VALID_ROUTES } from "./shared/ValidRoutes.js";
+import { connectMongo } from "./connectMongo.js";
+import { ImageProvider } from "./ImageProvider.js";
 
+const myMongoClient = connectMongo();
+const imageProvider = new ImageProvider(myMongoClient);
 const PORT = Number.parseInt(getEnvVar("PORT", false), 10) || 3000;
 const app = express();
 
@@ -65,7 +69,10 @@ function waitDuration(numMs) {
   return new Promise((resolve) => setTimeout(resolve, numMs));
 }
 app.get("/api/images", (req, res) => {
-  waitDuration(2000).then(() => res.send(IMAGES));
+  waitDuration(1000)
+    .then(() => imageProvider.getAllImages())
+    .then((images) => res.send(images))
+    .catch((err) => res.status(500).send(String(err)));
 });
 
 app.listen(PORT, () => {
