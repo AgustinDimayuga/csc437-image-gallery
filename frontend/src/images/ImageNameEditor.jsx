@@ -1,0 +1,48 @@
+import { useState } from "react";
+
+export function ImageNameEditor({ imageId, initialValue }) {
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [nameInput, setNameInput] = useState(initialValue || "");
+  function handleEditPressed() {
+    setIsEditingName(true);
+    setNameInput(initialValue || "");
+  }
+  async function handleSubmitPressed() {
+    // TODO
+    console.log("Hi");
+    const response = await fetch(`/api/images/${imageId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name: nameInput }),
+    });
+    console.log(response);
+  }
+
+  if (isEditingName) {
+    return (
+      <div style={{ margin: "1em 0" }}>
+        <label>
+          New Name
+          <input
+            required
+            style={{ marginLeft: "0.5em" }}
+            value={nameInput}
+            onChange={(e) => setNameInput(e.target.value)}
+          />
+        </label>
+        <button disabled={nameInput.length === 0} onClick={handleSubmitPressed}>
+          Submit
+        </button>
+        <button onClick={() => setIsEditingName(false)}>Cancel</button>
+      </div>
+    );
+  } else {
+    return (
+      <div style={{ margin: "1em 0" }}>
+        <button onClick={handleEditPressed}>Edit name</button>
+      </div>
+    );
+  }
+}

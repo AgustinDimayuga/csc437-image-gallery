@@ -1,0 +1,71 @@
+### Get all images. Each request **MUST** be delimited by a triple hash
+
+# This is a comment
+
+GET http://localhost:3000/api/images HTTP/1.1
+
+
+### A second example. Each request **MUST** be delimited by a triple hash
+
+POST http://localhost:3000/api/test HTTP/1.1
+Content-Type: application/json # Content-Type header is a must if you're sending JSON
+
+{
+  "a": 1,
+  "b": 2
+}
+
+
+### Api Image
+
+GET http://localhost:3000/api/images/69aa55775d0055a033b181c0 HTTP/1.1
+
+
+### Api Image Invalid image due to invalid imageID
+
+GET http://localhost:3000/api/images/helloSilus HTTP/1.1
+
+
+### API image invlaid due to no such image exist
+
+GET http://localhost:3000/api/images/69aa55775d0055a033b181cj HTTP/1.1
+
+
+### UpdateName: Actual working one
+
+PATCH http://localhost:3000/api/images/69aa55775d0055a033b181c0 HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "updatedName"
+}
+
+
+### UpdateName: Too long name
+
+PATCH http://localhost:3000/api/images/hi HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "loremdwaidwajkldwajdklwajdklwadwaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+}
+
+
+### UpdateName: Missing name attribute
+
+PATCH http://localhost:3000/api/images/hi HTTP/1.1
+Content-Type: application/json
+
+{
+  "helloSilus": "loremdwaidwajkldwajdklwajdklwadwaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+}
+
+
+### UpdateName: Invalid id
+
+PATCH http://localhost:3000/api/images/hi HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "hi"
+}
