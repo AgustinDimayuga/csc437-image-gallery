@@ -10,10 +10,10 @@ dotenv.config(); // Read the .env file in the current working directory, and loa
  * @param warnIfNotSet - whether to print a warning to the console if the variable isn't set (default true)
  * @returns {string} the value of the environment variable, or `undefined` if it isn't set
  */
-export function getEnvVar(varName, warnIfNotSet=true) {
-    const value = process.env[varName];
-    if (warnIfNotSet && !value) {
-        console.warn(`No such environment variable: ${varName}`);
-    }
-    return value;
+export function getEnvVar(varName, warnIfNotSet = true) {
+  const value = process.env[varName];
+  if (warnIfNotSet && !value) {
+    console.warn(`No such environment variable: ${varName}`);
+  }
+  return value;
 }
