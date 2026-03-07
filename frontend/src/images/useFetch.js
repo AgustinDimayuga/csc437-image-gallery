@@ -28,5 +28,5 @@ export function useFetch(url) {
     fetchImages();
   }, [url]);
 
-  return [imageData, loadingState, errorDuringFetch];
+  return [imageData, loadingState, errorDuringFetch, _setImageData];
 }
