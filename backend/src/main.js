@@ -6,9 +6,12 @@ import { VALID_ROUTES } from "./shared/ValidRoutes.js";
 import { connectMongo } from "./connectMongo.js";
 import { ImageProvider } from "./ImageProvider.js";
 import { registerImageRoutes } from "./routes/imageRoutes.js";
+import { registerAuthRoutes } from "./routes/authRoutes.js";
+import { CredentialProvider } from "./CredentialsProvider.js";
 
 const myMongoClient = connectMongo();
 const imageProvider = new ImageProvider(myMongoClient);
+const credentialProvider = new CredentialProvider(myMongoClient);
 const PORT = Number.parseInt(getEnvVar("PORT", false), 10) || 3000;
 const app = express();
 app.use(express.json());
@@ -23,6 +26,7 @@ app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}.  CTRL+C to stop.`);
 });
 registerImageRoutes(app, imageProvider);
+registerAuthRoutes(app, credentialProvider);
 
 const STATIC_DIR = getEnvVar("STATIC_DIR") || "public";
 
