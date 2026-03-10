@@ -14,17 +14,19 @@ function App() {
     <AllImages />,
     <ImageDetails />,
     <UploadPage />,
-    <LoginPage />,
+    <LoginPage isRegistering={false} />,
+    <LoginPage isRegistering={true} />,
     <MainLayout />,
   ];
 
   return (
     <Routes>
-      <Route path={VALID_ROUTES.HOME} element={POSSIBLE_PAGES[4]}>
+      <Route path={VALID_ROUTES.HOME} element={POSSIBLE_PAGES[5]}>
         <Route index element={POSSIBLE_PAGES[0]} />
         <Route path={VALID_ROUTES.IMAGE} element={POSSIBLE_PAGES[1]} />
         <Route path={VALID_ROUTES.UPLOAD} element={POSSIBLE_PAGES[2]} />
         <Route path={VALID_ROUTES.LOGIN} element={POSSIBLE_PAGES[3]} />
+        <Route path={VALID_ROUTES.REGISTER} element={POSSIBLE_PAGES[4]} />
       </Route>
     </Routes>
   );

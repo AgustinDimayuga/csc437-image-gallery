@@ -16,6 +16,7 @@ export class CredentialProvider {
   async registerUser(username, email, password) {
     const existing = await this.credsCollection.findOne({ username: username });
     if (existing) {
+      // user already exists
       return false;
     }
     const salt = await bcrypt.genSalt(10);
@@ -26,7 +27,7 @@ export class CredentialProvider {
         await this.credsCollection.insertOne(
           {
             username: username,
-            password: salt + hashedPassword,
+            password: hashedPassword,
           },
           { session },
         );
@@ -44,5 +45,19 @@ export class CredentialProvider {
       await session.endSession();
     }
     return true;
+  }
+  async verifyPassword(username, password) {
+    const hashedPassword = await this.credsCollection.findOne({
+      username: username,
+    });
+    if (!hashedPassword) {
+      // User does not exist
+      return false;
+    }
+    if (await bcrypt.compare(password, hashedPassword.password)) {
+      return true;
+    }
+
+    return false;
   }
 }

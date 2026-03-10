@@ -29,7 +29,9 @@ export function registerImageRoutes(app, imageProvider) {
   app.patch("/api/images/:id", async (req, res) => {
     try {
       await waitDuration(1000);
+
       console.log(req.body);
+      // TODO: body could be undefined fix this
       const name = req.body.name;
       if (!name) {
         return res.status(400).send({
@@ -38,17 +40,27 @@ export function registerImageRoutes(app, imageProvider) {
             "Body did not contain name attrbute please include a proper name : value attribute",
         });
       }
+
       if (name.length > 100) {
         return res.status(413).send({
           error: "Content Too Large",
           message: `Image name exceeds ${MAX_NAME_LENGTH} characters`,
         });
       }
-      const response = await imageProvider.updateImageName(req.params.id, name);
+      const response = await imageProvider.updateImageName(
+        req.params.id,
+        name,
+        req.userInfo.username,
+      );
       if (response == 0) {
         return res.status(404).send({
           error: "Not Found",
           message: "Image does not exist",
+        });
+      } else if (response === -1) {
+        return res.status(403).send({
+          error: "Forbidden",
+          message: "This user does not own this image",
         });
       }
       return res.status(204).send();

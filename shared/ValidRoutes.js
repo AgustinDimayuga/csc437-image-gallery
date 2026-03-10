@@ -3,4 +3,5 @@ export const VALID_ROUTES = {
   LOGIN: "/login",
   UPLOAD: "/upload",
   IMAGE: "/images/:imageId",
+  REGISTER: "/register",
 };

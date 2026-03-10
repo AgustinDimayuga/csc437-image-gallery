@@ -55,20 +55,29 @@ export class ImageProvider {
         path: "$author",
       },
     });
-    console.log("Get one images used");
     return this.collection.aggregate(pipeline).next();
   }
 
-  async updateImageName(imageId, newName) {
+  async updateImageName(imageId, newName, username) {
     if (!ObjectId.isValid(imageId)) {
       return 0;
     }
     const objectId = new ObjectId(imageId);
-    const response = await this.collection.updateOne(
-      { _id: objectId },
-      { $set: { name: newName } },
-    );
-    return response.matchedCount;
+    const image = await this.collection.findOne({ _id: objectId });
+    if (!image) {
+      // No such image exists
+      return 0;
+    }
+
+    if (image.authorId === username) {
+      const response = await this.collection.updateOne(
+        { _id: objectId },
+        { $set: { name: newName } },
+      );
+      return response.matchedCount;
+    }
+    return -1;
+
     // Do keep in mind the type of _id in the DB is ObjectId, not string
     // Use `new ObjectId(imageId)` to convert a string to an ObjectId.
   }

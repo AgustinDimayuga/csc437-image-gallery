@@ -8,14 +8,16 @@ import { ImageProvider } from "./ImageProvider.js";
 import { registerImageRoutes } from "./routes/imageRoutes.js";
 import { registerAuthRoutes } from "./routes/authRoutes.js";
 import { CredentialProvider } from "./CredentialsProvider.js";
+import { verifyAuthToken } from "./routes/verifyAuthToken.js";
 
 const myMongoClient = connectMongo();
 const imageProvider = new ImageProvider(myMongoClient);
 const credentialProvider = new CredentialProvider(myMongoClient);
 const PORT = Number.parseInt(getEnvVar("PORT", false), 10) || 3000;
 const app = express();
-app.use(express.json());
 
+app.use("/api/images", verifyAuthToken);
+app.use(express.json());
 app.get("/api/hello", (req, res) => {
   res.send("Hello, World " + SHARED_TEST);
 });
