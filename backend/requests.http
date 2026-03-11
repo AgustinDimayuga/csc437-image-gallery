@@ -3,7 +3,7 @@
 # This is a comment
 
 GET http://localhost:3000/api/images HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFndXN0aW54b2N1YSIsImlhdCI6MTc3MzA5MzYxMCwiZXhwIjoxNzczMTgwMDEwfQ.E7MdPuBmoJ31fRWPxZHZBlTTzIwX0_4xr0eQjXvhuZ8
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImUiLCJpYXQiOjE3NzMxOTA1MDQsImV4cCI6MTc3MzI3NjkwNH0.O3S4bFWBpZRUcocRakyGSicm7d2c_P-xOlxH1WCFhio
 
 
 ### A second example. Each request **MUST** be delimited by a triple hash

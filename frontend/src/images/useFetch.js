@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-export function useFetch(url) {
+export function useFetch(url, authToken) {
   const [imageData, _setImageData] = useState([]);
   const [loadingState, setLoadingState] = useState(true);
   const [errorDuringFetch, setErrorDuringFetch] = useState("");
@@ -8,7 +8,12 @@ export function useFetch(url) {
   useEffect(() => {
     async function fetchImages() {
       try {
-        const response = await fetch(url);
+        console.log(authToken);
+        const response = await fetch(url, {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        });
         // If response is an error (ie., not okay throw error)
         if (!response.ok) {
           throw new Error(
@@ -26,7 +31,7 @@ export function useFetch(url) {
       }
     }
     fetchImages();
-  }, [url]);
+  }, [url, authToken]);
 
   return [imageData, loadingState, errorDuringFetch, _setImageData];
 }

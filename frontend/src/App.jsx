@@ -8,13 +8,25 @@ import { Route, Routes } from "react-router";
 import { MainLayout } from "./MainLayout.jsx";
 import { VALID_ROUTES } from "./shared/ValidRoutes.js";
 import { SHARED_TEST } from "./shared/example.js";
+import { ProtectedRoute } from "./ProtectedRoute.jsx";
 
 function App() {
+  const [authToken, setAuthToken] = useState(
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImNodW5reWxvdmVyMjMiLCJpYXQiOjE3NzMxOTA2MzMsImV4cCI6MTc3MzI3NzAzM30.TISrnJBfgy5a3GxPtKY1zyizyl_CuztJHzBRBm-NqIU",
+  );
+
   const POSSIBLE_PAGES = [
-    <AllImages />,
-    <ImageDetails />,
+    <AllImages authToken={authToken} />,
+    <ImageDetails authToken={authToken} />,
     <UploadPage />,
-    <LoginPage isRegistering={false} />,
+    <LoginPage
+      onSignIn={(authToken) => {
+        console.log(authToken);
+
+        setAuthToken(authToken);
+      }}
+      isRegistering={false}
+    />,
     <LoginPage isRegistering={true} />,
     <MainLayout />,
   ];
@@ -22,9 +34,30 @@ function App() {
   return (
     <Routes>
       <Route path={VALID_ROUTES.HOME} element={POSSIBLE_PAGES[5]}>
-        <Route index element={POSSIBLE_PAGES[0]} />
-        <Route path={VALID_ROUTES.IMAGE} element={POSSIBLE_PAGES[1]} />
-        <Route path={VALID_ROUTES.UPLOAD} element={POSSIBLE_PAGES[2]} />
+        <Route
+          index
+          element={
+            <ProtectedRoute authToken={authToken}>
+              {POSSIBLE_PAGES[0]}
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={VALID_ROUTES.IMAGE}
+          element={
+            <ProtectedRoute authToken={authToken}>
+              {POSSIBLE_PAGES[1]}
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={VALID_ROUTES.UPLOAD}
+          element={
+            <ProtectedRoute authToken={authToken}>
+              {POSSIBLE_PAGES[2]}
+            </ProtectedRoute>
+          }
+        />
         <Route path={VALID_ROUTES.LOGIN} element={POSSIBLE_PAGES[3]} />
         <Route path={VALID_ROUTES.REGISTER} element={POSSIBLE_PAGES[4]} />
       </Route>

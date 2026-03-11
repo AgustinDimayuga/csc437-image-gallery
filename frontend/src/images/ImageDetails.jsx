@@ -2,10 +2,11 @@ import { useParams } from "react-router";
 import { useFetch } from "./useFetch.js";
 import { ImageNameEditor } from "./ImageNameEditor.jsx";
 
-export function ImageDetails() {
+export function ImageDetails({ authToken }) {
   const { imageId } = useParams();
   const [image, loadingState, errorDuringFetch, setImageData] = useFetch(
     `/api/images/${imageId}`,
+    authToken,
   );
   if (loadingState) return <span>Loading...</span>;
   if (errorDuringFetch.length !== 0) return <span>{errorDuringFetch}</span>;
@@ -24,6 +25,7 @@ export function ImageDetails() {
             name: newName,
           }));
         }}
+        authToken={authToken}
       />
       <p>By {image.author.username}</p>
       <img className="ImageDetails-img" src={image.src} alt={image.name} />

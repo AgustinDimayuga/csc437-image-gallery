@@ -1,6 +1,11 @@
 import { useState } from "react";
 
-export function ImageNameEditor({ imageId, initialValue, onRename }) {
+export function ImageNameEditor({
+  imageId,
+  initialValue,
+  onRename,
+  authToken,
+}) {
   const [isEditingName, setIsEditingName] = useState(false);
   const [nameInput, setNameInput] = useState(initialValue || "");
   function handleEditPressed() {
@@ -18,6 +23,7 @@ export function ImageNameEditor({ imageId, initialValue, onRename }) {
       const response = await fetch(`/api/images/${imageId}`, {
         method: "PATCH",
         headers: {
+          Authorization: `Bearer ${authToken}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ name: nameInput }),

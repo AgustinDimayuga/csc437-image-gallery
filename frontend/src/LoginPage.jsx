@@ -1,43 +1,45 @@
 import React, { useActionState } from "react";
 import { MainLayout } from "./MainLayout.jsx";
 import "./LoginPage.css";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { VALID_ROUTES } from "./shared/ValidRoutes.js";
 
-export function LoginPage({ isRegistering }) {
+async function apiRequest(url, body) {
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+  const data =
+    response.headers.get("content-length") !== "0"
+      ? await response.json()
+      : null;
+  if (!response.ok) {
+    throw new Error(`Error ${data.message}`);
+  }
+  return data;
+}
+async function registerUser(username, email, password) {
+  return await apiRequest("/api/users", {
+    username: username,
+    email: email,
+    password: password,
+  });
+}
+async function loginUser(username, password) {
+  return await apiRequest("/api/auth/tokens", {
+    username: username,
+    password: password,
+  });
+}
+export function LoginPage({ isRegistering, onSignIn }) {
   const usernameInputId = React.useId();
   const passwordInputId = React.useId();
   const emailInputId = React.useId();
-  async function apiRequest(url, body) {
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    });
-    const data =
-      response.headers.get("content-length") !== "0"
-        ? await response.json()
-        : null;
-    if (!response.ok) {
-      throw new Error(`Error ${data.message}`);
-    }
-    return data;
-  }
-  async function registerUser(username, email, password) {
-    return await apiRequest("/api/users", {
-      username: username,
-      email: email,
-      password: password,
-    });
-  }
-  async function loginUser(username, password) {
-    return await apiRequest("/api/auth/tokens", {
-      username: username,
-      password: password,
-    });
-  }
+  const navigate = useNavigate();
+
   const [result, submitAction, isPending] = useActionState(
     async (prevState, formData) => {
       const email = formData.get("email");
@@ -49,8 +51,9 @@ export function LoginPage({ isRegistering }) {
           return { success: true, message: "Account created sucessfully!" };
         } else {
           const data = await loginUser(username, password);
-          console.log("Auth token:", data.token);
-          return { success: true, message: "Logged in sucessfully!" };
+          onSignIn(data.token);
+          navigate("/");
+          return { success: true, message: "Signed in!" };
         }
       } catch (error) {
         return { success: false, message: error.message };
