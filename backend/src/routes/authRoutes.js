@@ -77,7 +77,7 @@ export function registerAuthRoutes(app, credentialsProvider) {
       });
     } else {
       res.status(401).send({
-        error: "Incorrect Username/ Password",
+        message: "Incorrect Username/ Password",
       });
     }
   });

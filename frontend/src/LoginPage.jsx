@@ -8,34 +8,52 @@ export function LoginPage({ isRegistering }) {
   const usernameInputId = React.useId();
   const passwordInputId = React.useId();
   const emailInputId = React.useId();
+  async function apiRequest(url, body) {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    });
+    const data =
+      response.headers.get("content-length") !== "0"
+        ? await response.json()
+        : null;
+    if (!response.ok) {
+      throw new Error(`Error ${data.message}`);
+    }
+    return data;
+  }
+  async function registerUser(username, email, password) {
+    return await apiRequest("/api/users", {
+      username: username,
+      email: email,
+      password: password,
+    });
+  }
+  async function loginUser(username, password) {
+    return await apiRequest("/api/auth/tokens", {
+      username: username,
+      password: password,
+    });
+  }
   const [result, submitAction, isPending] = useActionState(
     async (prevState, formData) => {
       const email = formData.get("email");
       const username = formData.get("username");
       const password = formData.get("password");
-
       try {
-        const response = await fetch(`/api/users`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: email,
-            username: username,
-            password: password,
-          }),
-        });
-
-        console.log("Sucessfully created an account");
-        if (!response.ok) {
-          throw new Error(
-            `Error: HTTP ${response.status} ${response.statusText}`,
-          );
+        if (isRegistering) {
+          await registerUser(username, email, password);
+          return { success: true, message: "Account created sucessfully!" };
+        } else {
+          const data = await loginUser(username, password);
+          console.log("Auth token:", data.token);
+          return { success: true, message: "Logged in sucessfully!" };
         }
-      } catch (e) {
-        //TODO: do something
-        console.error(e);
+      } catch (error) {
+        return { success: false, message: error.message };
       }
     },
 
@@ -76,6 +94,13 @@ export function LoginPage({ isRegistering }) {
           required
         />
         <input disabled={isPending} type="submit" value="Submit" />
+        <div aria-live="polite">
+          {result && (
+            <p style={{ color: result.success ? "green" : "red" }}>
+              {result.message}
+            </p>
+          )}
+        </div>
       </form>
       {isRegistering ? (
         <p>
