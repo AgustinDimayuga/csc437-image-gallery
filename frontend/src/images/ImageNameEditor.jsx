@@ -29,9 +29,10 @@ export function ImageNameEditor({
         body: JSON.stringify({ name: nameInput }),
       });
 
+      const errorMessage = await response.json();
       if (!response.ok) {
         throw new Error(
-          `Error: HTTP ${response.status} ${response.statusText}`,
+          `Error: ${errorMessage.error}, ${errorMessage.message}`,
         );
       }
       onRename(nameInput);

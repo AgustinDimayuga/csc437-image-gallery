@@ -11,9 +11,7 @@ import { SHARED_TEST } from "./shared/example.js";
 import { ProtectedRoute } from "./ProtectedRoute.jsx";
 
 function App() {
-  const [authToken, setAuthToken] = useState(
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImNodW5reWxvdmVyMjMiLCJpYXQiOjE3NzMxOTA2MzMsImV4cCI6MTc3MzI3NzAzM30.TISrnJBfgy5a3GxPtKY1zyizyl_CuztJHzBRBm-NqIU",
-  );
+  const [authToken, setAuthToken] = useState(null);
 
   const POSSIBLE_PAGES = [
     <AllImages authToken={authToken} />,
