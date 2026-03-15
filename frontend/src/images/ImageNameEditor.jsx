@@ -19,7 +19,6 @@ export function ImageNameEditor({
     try {
       setErrorDuringFetch("");
       setReqInProgess(true);
-      console.log("Hi");
       const response = await fetch(`/api/images/${imageId}`, {
         method: "PATCH",
         headers: {

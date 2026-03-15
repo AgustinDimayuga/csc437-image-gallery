@@ -19,8 +19,6 @@ function App() {
     <UploadPage />,
     <LoginPage
       onSignIn={(authToken) => {
-        console.log(authToken);
-
         setAuthToken(authToken);
       }}
       isRegistering={false}

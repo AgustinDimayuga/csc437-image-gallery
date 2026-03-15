@@ -8,7 +8,6 @@ export function useFetch(url, authToken) {
   useEffect(() => {
     async function fetchImages() {
       try {
-        console.log(authToken);
         const response = await fetch(url, {
           headers: {
             Authorization: `Bearer ${authToken}`,
