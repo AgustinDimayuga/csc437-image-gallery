@@ -16,7 +16,7 @@ function App() {
   const POSSIBLE_PAGES = [
     <AllImages authToken={authToken} />,
     <ImageDetails authToken={authToken} />,
-    <UploadPage />,
+    <UploadPage authToken={authToken} />,
     <LoginPage
       onSignIn={(authToken) => {
         setAuthToken(authToken);

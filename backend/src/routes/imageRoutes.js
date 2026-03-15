@@ -8,6 +8,16 @@ export function registerImageRoutes(app, imageProvider) {
     res.send(response);
   });
 
+  app.post(
+    "/api/images",
+    parseMultipartFormDataAndStoreToDisk,
+    handleImageFileErrors,
+    async (req, res) => {
+      // Final handler function after the above two middleware functions finish running
+      res.status(500).send("Not implemented");
+    },
+  );
+
   const MAX_NAME_LENGTH = 100;
   app.get("/api/images/:id", async (req, res) => {
     try {
