@@ -3,7 +3,7 @@
 # This is a comment
 
 GET http://localhost:3000/api/images HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImUiLCJpYXQiOjE3NzMxOTA1MDQsImV4cCI6MTc3MzI3NjkwNH0.O3S4bFWBpZRUcocRakyGSicm7d2c_P-xOlxH1WCFhio
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImUiLCJpYXQiOjE3NzM2OTIwMzIsImV4cCI6MTc3NDI5NjgzMn0.KqpjU4seuUpKhMlIizSDLMEA8BmwL_YZrO8CNgmeLzA
 
 
 ### A second example. Each request **MUST** be delimited by a triple hash
@@ -17,161 +17,264 @@ Content-Type: application/json # Content-Type header is a must if you're sending
 }
 
 
-### Api Image
+# =============================================================
+# ACCOUNT CREATION  (POST /api/users)
+# =============================================================
 
-GET http://localhost:3000/api/images/69aa55775d0055a033b181c0 HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFndXN0aW54b2N1YSIsImlhdCI6MTc3MzA5MzYxMCwiZXhwIjoxNzczMTgwMDEwfQ.E7MdPuBmoJ31fRWPxZHZBlTTzIwX0_4xr0eQjXvhuZ8
-
-
-### Api Edit ChunkyLoverImage
-
-PATCH http://localhost:3000/api/images/69aa55775d0055a033b181c0 HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImNodW5reWxvdmVyMjMiLCJpYXQiOjE3NzMwOTM2MTAsImV4cCI6MTc3MzE4MDAxMH0.AYSGvI6_L-Z0-jUxdDXUI9eicLPWsgOqCJdNhCQPy4Y
-Content-Type: application/json
-
-{
-  "name": "JWTteJWTtestJWTtestst"
-}
-
-
-### Api Image Invalid image due to invalid imageID
-
-GET http://localhost:3000/api/images/helloSilus HTTP/1.1
-
-
-### API image invlaid due to no such image exist
-
-GET http://localhost:3000/api/images/69aa55775d0055a033b181cj HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFndXN0aW54b2N1YSIsImlhdCI6MTc3MzA5MzYxMCwiZXhwIjoxNzczMTgwMDEwfQ.E7MdPuBmoJ31fRWPxZHZBlTTzIwX0_4xr0eQjXvhuZ8
-
-
-### UpdateName: Actual working one
-
-PATCH http://localhost:3000/api/images/69aa55775d0055a033b181c0 HTTP/1.1
-Content-Type: application/json
-
-{
-  "name": "updatedName"
-}
-
-
-### UpdateName: Too long name
-
-PATCH http://localhost:3000/api/images/hi HTTP/1.1
-Content-Type: application/json
-
-{
-  "name": "loremdwaidwajkldwajdklwajdklwadwaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-}
-
-
-### UpdateName: Missing name attribute
-
-PATCH http://localhost:3000/api/images/hi HTTP/1.1
-Content-Type: application/json
-
-{
-  "helloSilus": "loremdwaidwajkldwajdklwajdklwadwaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-}
-
-
-### UpdateName: Invalid id
-
-PATCH http://localhost:3000/api/images/hi HTTP/1.1
-Content-Type: application/json
-
-{
-  "name": "hi"
-}
-
-
-### Post password
+### [Account Creation] 201 Created — new unique user
+# Expect: 201 Created + auth token in body
 
 POST http://localhost:3000/api/users HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "agustindimayuga@linux.com",
-  "password": "password",
-  "username": "agustinxocua"
+  "username": "testuser_new",
+  "email": "testuser_new@example.com",
+  "password": "password123"
 }
 
 
-### Post password repeat user error
+### [Account Creation] 409 Conflict — username already taken
+# Expect: 409 Conflict with error message "Username already taken"
+# (Run the request above first so testuser_new exists, OR use a known existing user)
 
 POST http://localhost:3000/api/users HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "agustindimayuga@linux.com",
-  "password": "password",
-  "username": "agustinxocua"
+  "username": "e",
+  "email": "e@example.com",
+  "password": "password"
 }
 
 
-### Post password
+### [Account Creation] 400 Bad Request — missing username
+# Expect: 400 Bad Request with "Missing username, email, or password"
 
 POST http://localhost:3000/api/users HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "agustindimayuga@linux.com",
-  "password": "password",
-  "username": "hello"
+  "email": "someone@example.com",
+  "password": "password123"
 }
 
 
-### Post invalid body
+### [Account Creation] 400 Bad Request — missing password
+# Expect: 400 Bad Request
 
 POST http://localhost:3000/api/users HTTP/1.1
 Content-Type: application/json
 
 {
-  "doodle1": "agustindimayuga@linux.com",
-  "doodle2": "password",
-  "doodle3": "agustinxocua"
+  "username": "someuser",
+  "email": "someuser@example.com"
 }
 
 
-### Post Login Correct response
+### [Account Creation] 400 Bad Request — completely wrong body
+# Expect: 400 Bad Request
+
+POST http://localhost:3000/api/users HTTP/1.1
+Content-Type: application/json
+
+{
+  "foo": "bar",
+  "baz": "qux"
+}
+
+
+# =============================================================
+# LOGIN  (POST /api/auth/tokens)
+# =============================================================
+
+### [Login] 200 OK — valid credentials, returns auth token
+# Expect: 200 OK + JWT token string in body
 
 POST http://localhost:3000/api/auth/tokens HTTP/1.1
 Content-Type: application/json
 
 {
-  "password": "password",
-  "username": "agustinxocua"
+  "username": "e",
+  "password": "password"
 }
 
 
-### Post Login Wrong password
+### [Login] 401 Unauthorized — wrong password
+# Expect: 401 Unauthorized
 
 POST http://localhost:3000/api/auth/tokens HTTP/1.1
 Content-Type: application/json
 
 {
-  "password": "password1",
-  "username": "agustinxocua"
+  "username": "e",
+  "password": "wrongpassword"
 }
 
 
-### Post Login Wrong username
+### [Login] 401 Unauthorized — username does not exist
+# Expect: 401 Unauthorized
 
 POST http://localhost:3000/api/auth/tokens HTTP/1.1
 Content-Type: application/json
 
 {
-  "password": "password",
-  "username": "agustinocua"
+  "username": "userThatDoesNotExist99999",
+  "password": "password"
 }
 
 
-### Post no username/password
+### [Login] 400 Bad Request — missing username and password
+# Expect: 400 Bad Request
 
 POST http://localhost:3000/api/auth/tokens HTTP/1.1
 Content-Type: application/json
 
 {
-  "doodle1": "ehidhwiadhwiad",
-  "doodle2": "fhjdksafhdjsklfdsjhkl"
+  "foo": "bar"
+}
+
+
+### [Login] 400 Bad Request — missing password field only
+# Expect: 400 Bad Request
+
+POST http://localhost:3000/api/auth/tokens HTTP/1.1
+Content-Type: application/json
+
+{
+  "username": "e"
+}
+
+
+# =============================================================
+# GET IMAGES  (GET /api/images  and  GET /api/images/:id)
+# =============================================================
+
+### [Get All Images] 200 OK — authenticated request
+# Expect: 200 OK + array of image objects
+
+GET http://localhost:3000/api/images HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImUiLCJpYXQiOjE3NzM2OTIwMzIsImV4cCI6MTc3NDI5NjgzMn0.KqpjU4seuUpKhMlIizSDLMEA8BmwL_YZrO8CNgmeLzA
+
+
+### [Get All Images] 401 Unauthorized — no token
+# Expect: 401 Unauthorized
+
+GET http://localhost:3000/api/images HTTP/1.1
+
+
+### [Get All Images] 401 Unauthorized — invalid/expired token
+# Expect: 401 Unauthorized
+
+GET http://localhost:3000/api/images HTTP/1.1
+Authorization: Bearer this.is.not.a.valid.token
+
+
+### [Get Single Image] 200 OK — valid id, authenticated
+# Expect: 200 OK + image object (image owned by user "e")
+
+GET http://localhost:3000/api/images/69b799f009051de8b0ed77c3 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImUiLCJpYXQiOjE3NzM2OTIwMzIsImV4cCI6MTc3NDI5NjgzMn0.KqpjU4seuUpKhMlIizSDLMEA8BmwL_YZrO8CNgmeLzA
+
+
+### [Get Single Image] 401 Unauthorized — no token
+# Expect: 401 Unauthorized
+
+GET http://localhost:3000/api/images/69b799f009051de8b0ed77c3 HTTP/1.1
+
+
+### [Get Single Image] 404 Not Found — valid format id but image doesn't exist
+# Expect: 404 Not Found
+
+GET http://localhost:3000/api/images/aaaaaaaaaaaaaaaaaaaaaaaa HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImUiLCJpYXQiOjE3NzM2OTIwMzIsImV4cCI6MTc3NDI5NjgzMn0.KqpjU4seuUpKhMlIizSDLMEA8BmwL_YZrO8CNgmeLzA
+
+
+# =============================================================
+# RENAME IMAGE  (PATCH /api/images/:id)
+# =============================================================
+
+### [Rename Image] 204 No Content — owner renames their own image
+# Expect: 204 No Content (user "e" owns image 69b799f009051de8b0ed77c3)
+
+PATCH http://localhost:3000/api/images/69b799f009051de8b0ed77c3 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImUiLCJpYXQiOjE3NzM2OTIwMzIsImV4cCI6MTc3NDI5NjgzMn0.KqpjU4seuUpKhMlIizSDLMEA8BmwL_YZrO8CNgmeLzA
+
+{
+  "name": "My Renamed Image"
+}
+
+
+### [Rename Image] 401 Unauthorized — no auth token
+# Expect: 401 Unauthorized
+
+PATCH http://localhost:3000/api/images/69b799f009051de8b0ed77c3 HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "Should Not Work"
+}
+
+
+### [Rename Image] 401 Unauthorized — invalid token
+# Expect: 401 Unauthorized
+
+PATCH http://localhost:3000/api/images/69b799f009051de8b0ed77c3 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer this.is.not.a.valid.token
+
+{
+  "name": "Should Not Work"
+}
+
+
+### [Rename Image] 403 Forbidden — authenticated but NOT the owner
+# Expect: 403 Forbidden
+# NOTE: Replace the token below with a valid token for a user OTHER than "e".
+# You can get one by registering a new account and logging in via the requests above.
+# Example: log in as "agustinxocua" and paste the returned token here.
+
+PATCH http://localhost:3000/api/images/69b799f009051de8b0ed77c3 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer REPLACE_WITH_VALID_TOKEN_FOR_DIFFERENT_USER
+
+{
+  "name": "Forbidden Rename Attempt"
+}
+
+
+### [Rename Image] 400 Bad Request — missing name field
+# Expect: 400 Bad Request
+
+PATCH http://localhost:3000/api/images/69b799f009051de8b0ed77c3 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImUiLCJpYXQiOjE3NzM2OTIwMzIsImV4cCI6MTc3NDI5NjgzMn0.KqpjU4seuUpKhMlIizSDLMEA8BmwL_YZrO8CNgmeLzA
+
+{
+  "notname": "wrong field"
+}
+
+
+### [Rename Image] 413 Content Too Large — name exceeds 100 characters
+# Expect: 413 Content Too Large
+
+PATCH http://localhost:3000/api/images/69b799f009051de8b0ed77c3 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImUiLCJpYXQiOjE3NzM2OTIwMzIsImV4cCI6MTc3NDI5NjgzMn0.KqpjU4seuUpKhMlIizSDLMEA8BmwL_YZrO8CNgmeLzA
+
+{
+  "name": "thisnameiswaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaytoolong"
+}
+
+
+### [Rename Image] 404 Not Found — image id does not exist
+# Expect: 404 Not Found
+
+PATCH http://localhost:3000/api/images/aaaaaaaaaaaaaaaaaaaaaaaa HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImUiLCJpYXQiOjE3NzM2OTIwMzIsImV4cCI6MTc3NDI5NjgzMn0.KqpjU4seuUpKhMlIizSDLMEA8BmwL_YZrO8CNgmeLzA
+
+{
+  "name": "Ghost Image"
 }
