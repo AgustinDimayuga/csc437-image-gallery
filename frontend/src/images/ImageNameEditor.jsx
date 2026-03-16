@@ -28,8 +28,8 @@ export function ImageNameEditor({
         body: JSON.stringify({ name: nameInput }),
       });
 
-      const errorMessage = await response.json();
       if (!response.ok) {
+        const errorMessage = await response.json();
         throw new Error(
           `Error: ${errorMessage.error}, ${errorMessage.message}`,
         );
@@ -63,7 +63,7 @@ export function ImageNameEditor({
             Submit
           </button>
           <button
-            disabled={isEditingName}
+            disabled={reqInProgess}
             onClick={() => setIsEditingName(false)}
           >
             Cancel

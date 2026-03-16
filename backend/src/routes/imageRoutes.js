@@ -1,3 +1,8 @@
+import {
+  handleImageFileErrors,
+  imageMiddlewareFactory,
+} from "../imageUploadMiddleware.js";
+
 export function registerImageRoutes(app, imageProvider) {
   function waitDuration(numMs) {
     return new Promise((resolve) => setTimeout(resolve, numMs));
@@ -10,11 +15,35 @@ export function registerImageRoutes(app, imageProvider) {
 
   app.post(
     "/api/images",
-    parseMultipartFormDataAndStoreToDisk,
+    imageMiddlewareFactory.single("image"),
     handleImageFileErrors,
     async (req, res) => {
-      // Final handler function after the above two middleware functions finish running
-      res.status(500).send("Not implemented");
+      try {
+        // Final handler function after the above two middleware functions finish running
+        const file = req.file;
+        const name = req.body.name;
+
+        // Check if both are present
+        if (!file || !name) {
+          return res.status(400).json({
+            error: "Missing required fields",
+            message: "You must submit both an image file and a name",
+          });
+        }
+        const response = await imageProvider.createImage(
+          file.filename,
+          req.userInfo.username,
+          name,
+        );
+
+        return res.status(201).json({
+          message: "Image uploaded successfully",
+          imageId: response,
+        });
+      } catch (e) {
+        console.error(e.message);
+        return res.status(500).json({ error: "Internal server error" });
+      }
     },
   );
 
@@ -41,7 +70,12 @@ export function registerImageRoutes(app, imageProvider) {
       await waitDuration(1000);
 
       console.log(req.body);
-      // TODO: body could be undefined fix this
+      if (!req.body) {
+        return res.status(400).send({
+          error: "Bad Request",
+          message: "Body is empty",
+        });
+      }
       const name = req.body.name;
       if (!name) {
         return res.status(400).send({

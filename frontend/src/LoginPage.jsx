@@ -46,15 +46,14 @@ export function LoginPage({ isRegistering, onSignIn }) {
       const username = formData.get("username");
       const password = formData.get("password");
       try {
+        let data;
         if (isRegistering) {
-          await registerUser(username, email, password);
-          return { success: true, message: "Account created sucessfully!" };
+          data = await registerUser(username, email, password);
         } else {
-          const data = await loginUser(username, password);
-          onSignIn(data.token);
-          navigate("/");
-          return { success: true, message: "Signed in!" };
+          data = await loginUser(username, password);
         }
+        onSignIn(data.token);
+        navigate("/");
       } catch (error) {
         return { success: false, message: error.message };
       }

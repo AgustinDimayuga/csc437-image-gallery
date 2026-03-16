@@ -33,3 +33,4 @@ registerAuthRoutes(app, credentialProvider);
 const STATIC_DIR = getEnvVar("STATIC_DIR") || "public";
 
 app.use(express.static(STATIC_DIR));
+app.use("/uploads", express.static(getEnvVar("IMAGE_UPLOAD_DIR")));

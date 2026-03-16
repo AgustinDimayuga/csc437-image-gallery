@@ -23,7 +23,12 @@ function App() {
       }}
       isRegistering={false}
     />,
-    <LoginPage isRegistering={true} />,
+    <LoginPage
+      onSignIn={(authToken) => {
+        setAuthToken(authToken);
+      }}
+      isRegistering={true}
+    />,
     <MainLayout />,
   ];
 

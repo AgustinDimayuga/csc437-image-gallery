@@ -51,7 +51,20 @@ export function registerAuthRoutes(app, credentialsProvider) {
       });
     }
 
-    return res.status(200).send();
+    const authResponse = await credentialsProvider.verifyPassword(
+      username,
+      password,
+    );
+    if (authResponse) {
+      const token = await generateAuthToken(username);
+      return res.status(201).json({
+        token: token,
+      });
+    } else {
+      return res.status(401).send({
+        message: "Incorrect Username/ Password",
+      });
+    }
   });
   app.post("/api/auth/tokens", async (req, res) => {
     const { username, password } = req.body;

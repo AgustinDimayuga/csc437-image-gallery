@@ -81,4 +81,12 @@ export class ImageProvider {
     // Do keep in mind the type of _id in the DB is ObjectId, not string
     // Use `new ObjectId(imageId)` to convert a string to an ObjectId.
   }
+  async createImage(filename, authorId, name) {
+    const result = await this.collection.insertOne({
+      src: `/uploads/${filename}`,
+      name: name,
+      authorId: authorId,
+    });
+    return result.insertedId;
+  }
 }

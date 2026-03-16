@@ -1,13 +1,24 @@
 import multer from "multer";
+import { getEnvVar } from "./getEnvVar.js";
 
 class ImageFormatError extends Error { }
 
 const storageEngine = multer.diskStorage({
   destination: function(req, file, cb) {
-    // TODO 1
+    cb(null, getEnvVar("IMAGE_UPLOAD_DIR"));
   },
   filename: function(req, file, cb) {
-    // TODO 2
+    // TODO: 2
+    const mediaType = file.mimetype;
+    let fileExtension;
+    if (mediaType === "image/png") {
+      fileExtension = "png";
+    } else if (mediaType === "image/jpg" || mediaType === "image/jpeg") {
+      fileExtension = "jpg";
+    } else cb(new ImageFormatError("Unsupported image type"));
+    const fileName =
+      Date.now() + "-" + Math.round(Math.random() * 1e9) + "." + fileExtension;
+    cb(null, fileName);
   },
 });
 
